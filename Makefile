@@ -1,12 +1,8 @@
 # Ensure the targets are always run. Needed to prevent side effects when running with "-q"
-.PHONY: build up down local
+.PHONY: up down local
 default: local ;
 
 ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-
-# Build the image
-build:
-	@docker build -t yd/mermaidcli:latest .
 
 # Bring up
 up:
@@ -16,7 +12,7 @@ up:
 down:
 	@docker-compose down --volumes --rmi local
 
-local: build up down
+local: up down
 
 # Cosmetics
 GREEN := "\033[1;32m"
