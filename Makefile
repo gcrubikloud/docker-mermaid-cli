@@ -1,18 +1,20 @@
 # Ensure the targets are always run. Needed to prevent side effects when running with "-q"
-.PHONY: up down local
-default: local ;
+.PHONY: build debug
+default: build;
 
+APP_NAME := "mermaid-cli"
+REPO_NAME := "sc250024"
 ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+VERSION := $(shell git rev-parse --abbrev-ref HEAD)
 
 # Bring up
-up:
-	@docker-compose up -d --force-recreate
-	@docker-compose logs --follow
+build:
+	${INFO} "Building version ${VERSION} of ${APP_NAME}..."
+	@docker build -t ${REPO_NAME}/${APP_NAME}:latest -t ${REPO_NAME}/${APP_NAME}:${VERSION} ${ROOT_DIR}
 
-down:
-	@docker-compose down --volumes --rmi local
-
-local: up down
+debug:
+	@echo ${ROOT_DIR}
+	@echo ${VERSION}
 
 # Cosmetics
 GREEN := "\033[1;32m"
