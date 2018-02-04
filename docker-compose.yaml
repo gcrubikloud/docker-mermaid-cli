@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mermaidjs-builder:
+    build:
+      context: .
+    # # Set environment variables below if you want to change the default options.
+    # # More information here: https://github.com/mermaidjs/mermaid.cli
+    # environment:
+    #   MERMAID_OUTPUT_BGCOLOR: "white"
+    #   MERMAID_OUTPUT_FORMAT: "pdf"
+    #   MERMAID_OUTPUT_HEIGHT: "600"
+    #   MERMAID_OUTPUT_THEME: "forest"
+    #   MERMAID_OUTPUT_WIDTH: "800"
+    image: yd/mermaidcli:latest
+    shm_size: '2gb'
+    volumes:
+      - ./:/app:rw
