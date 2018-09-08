@@ -1,4 +1,4 @@
-FROM node:9.5.0-alpine
+FROM node:10.10.0-alpine
 
 # Create /data dir where files can be read/written.
 ENV \
@@ -16,12 +16,12 @@ RUN set -ex \
         nss@edge \
     && rm -rf /tmp/* /var/cache/apk/*
 
-# Puppeteer v0.11.0 works with Chromium 63.
-RUN yarn add puppeteer@0.11.0 mermaid.cli@0.3.1
+RUN /usr/bin/chromium-browser --version 
 
-# Fixing location of Chrome executable.
-RUN sed -i "63s#puppeteer.launch()#puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '/usr/bin/chromium-browser'})#g" \
-    /node_modules/mermaid.cli/index.bundle.js
+# Puppeteer v0.11.0 works with Chromium 63.
+RUN yarn add puppeteer@1.8.0 mermaid.cli@0.5.1
+
+COPY src/puppeteerConfigFile.json /etc/puppeteerConfigFile.json
 
 # Symlink to PATH.
 RUN ln -sf /node_modules/mermaid.cli/index.bundle.js /usr/local/bin/mmdc
@@ -29,4 +29,5 @@ RUN ln -sf /node_modules/mermaid.cli/index.bundle.js /usr/local/bin/mmdc
 # Create data directory.
 RUN mkdir -p ${DATA_DIRECTORY}
 
-CMD ["mmdc"]
+ENTRYPOINT ["mmdc", "--puppeteerConfigFile", "/etc/puppeteerConfigFile.json"]
+CMD ["--help"]
